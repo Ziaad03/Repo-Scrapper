@@ -1,6 +1,9 @@
 // CommonJS (safe default)
 const AdmZip = require("adm-zip");
 
+// For Node.js < 18, you might need to install and require node-fetch
+// const fetch = require("node-fetch");
+
 module.exports = async (req, res) => {
   try {
     const { owner, repo, branch, id } = req.query;

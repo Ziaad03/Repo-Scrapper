@@ -1,0 +1,9 @@
+{
+  "name": "repo-scrapper-api",
+  "version": "1.0.0",
+  "description": "Serverless API for downloading GitHub repos",
+  "main": "download.js",
+  "dependencies": {
+    "adm-zip": "^0.5.10"
+  }
+}
