@@ -96,7 +96,7 @@ export default function RepoDetails({ owner }) {
     //   console.error("Download failed", err);
     //   alert("Download failed: " + err.message);
     // }
-      const downloadUrl = `/api/download?owner=${owner}&repo=${repo}&branch=${branch}`;
+      const downloadUrl = `/api/download?owner=${owner}&repo=${repoName}&branch=${branchName}&id=${id}`;
       window.open(downloadUrl, "_blank"); // easiest
   }
 
