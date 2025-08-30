@@ -23,7 +23,7 @@ export default function RepoDetails({ owner }) {
 
   const token = import.meta.env.VITE_GITHUB_TOKEN; // prefer env usage
 
-  const BASE_URL = 'https://repo-scrapper-production-91da.up.railway.app/'
+  const BASE_URL = 'https://repo-scrapper-production-91da.up.railway.app'
   async function fetchRepos() {
     if (!owner) {
       setError("Please select a Trainee ID first");
