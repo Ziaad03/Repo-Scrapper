@@ -80,7 +80,7 @@ export default function RepoDetails({ owner }) {
       // Use different URLs for development vs production
       const baseUrl = import.meta.env.DEV ? 'http://localhost:4000' : '';
       const resp = await fetch(
-        `${baseUrl}/api/download?owner=${encodeURIComponent(owner)}&repo=${encodeURIComponent(
+        `/api/download?owner=${encodeURIComponent(owner)}&repo=${encodeURIComponent(
           repoName
         )}&branch=${encodeURIComponent(branchName)}&id=${encodeURIComponent(id)}`
       );
