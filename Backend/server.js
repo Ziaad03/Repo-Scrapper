@@ -10,8 +10,11 @@ const __dirname = path.resolve();
 
 import { Buffer } from "buffer";
 
+const FRONTEND_URL = process.env.FRONTEND_URL || "*"; // * allows all origins
+
+
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" })); // adjust if needed
+app.use(cors({ origin: FRONTEND_URL })); // adjust if needed
 // // serve static files
 // app.use(express.static(path.join(__dirname, "build"))); // or "dist" for Vite
 // app.get("/", (req, res) => {
