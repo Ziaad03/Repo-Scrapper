@@ -12,11 +12,11 @@ import { Buffer } from "buffer";
 
 const app = express();
 app.use(cors({ origin: "http://localhost:5173" })); // adjust if needed
-// serve static files
-app.use(express.static(path.join(__dirname, "build"))); // or "dist" for Vite
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
+// // serve static files
+// app.use(express.static(path.join(__dirname, "build"))); // or "dist" for Vite
+// app.get("/", (req, res) => {
+//   res.sendFile(path.join(__dirname, "build", "index.html"));
+// });
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // prefer env
 
