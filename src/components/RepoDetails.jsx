@@ -77,16 +77,13 @@ export default function RepoDetails({ owner }) {
     const id = Object.keys(owners).find((key) => owners[key] === owner) || "id";
 
     try {
-      // Use different URLs for development vs production
-      const baseUrl = import.meta.env.DEV ? 'http://localhost:4000' : '';
       const resp = await fetch(
-        `/api/download?owner=${encodeURIComponent(owner)}&repo=${encodeURIComponent(
+        `http://localhost:4000/download?owner=${encodeURIComponent(owner)}&repo=${encodeURIComponent(
           repoName
         )}&branch=${encodeURIComponent(branchName)}&id=${encodeURIComponent(id)}`
       );
 
       if (!resp.ok) throw new Error("Failed to download");
-      
       const blob = await resp.blob();
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
@@ -99,6 +96,29 @@ export default function RepoDetails({ owner }) {
       console.error("Download failed", err);
       alert("Download failed: " + err.message);
     }
+    // try {
+    //   // Use different URLs for development vs production
+    //   const baseUrl = import.meta.env.DEV ? 'http://localhost:4000' : '';
+    //   const resp = await fetch(
+    //     `/api/download?owner=${encodeURIComponent(owner)}&repo=${encodeURIComponent(
+    //       repoName
+    //     )}&branch=${encodeURIComponent(branchName)}&id=${encodeURIComponent(id)}`
+    //   );
+
+    //   if (!resp.ok) throw new Error("Failed to download");
+      
+    //   const blob = await resp.blob();
+    //   const link = document.createElement("a");
+    //   link.href = URL.createObjectURL(blob);
+    //   link.download = `${id}-${branchName}.zip`;
+    //   document.body.appendChild(link);
+    //   link.click();
+    //   link.remove();
+    //   URL.revokeObjectURL(link.href);
+    // } catch (err) {
+    //   console.error("Download failed", err);
+    //   alert("Download failed: " + err.message);
+    // }
   }
 
   return (

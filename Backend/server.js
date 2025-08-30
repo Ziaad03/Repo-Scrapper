@@ -29,23 +29,42 @@ app.get('/download', async (req, res) => {
   console.log(`[FETCH] Fetching from API: ${apiUrl}`);
 
   try {
-    const resp = await fetch(apiUrl, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        Accept: "application/vnd.github.v3+json",
-      },
-      redirect: "follow",
-    });
+    // Build headers safely
+    const headers = {
+      Accept: "application/vnd.github+json",
+      "User-Agent": "Repo-Scrapper",
+    };
+    if (GITHUB_TOKEN) {
+      // prefer Bearer for newer token types, fall back to token prefix
+      headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
+      console.log('[AUTH] GitHub token present (masked):', `${GITHUB_TOKEN.slice(0,4)}...${GITHUB_TOKEN.slice(-4)}`);
+    } else {
+      console.log('[AUTH] No GitHub token configured');
+    }
+
+    let resp = await fetch(apiUrl, { headers, redirect: 'follow' });
+    console.log(`[FETCH] initial status=${resp.status} finalUrl=${resp.url}`);
+
+    // If token was present but we got 401, try unauthenticated fetch (public repo case)
+    if (resp.status === 401) {
+      console.warn('[AUTH] Received 401 from GitHub with token; trying unauthenticated request in case repo is public');
+      // try again without Authorization header
+      const publicHeaders = { Accept: headers.Accept, "User-Agent": headers["User-Agent"] };
+      resp = await fetch(apiUrl, { headers: publicHeaders, redirect: 'follow' });
+      console.log(`[FETCH] unauthenticated retry status=${resp.status} finalUrl=${resp.url}`);
+    }
 
     console.log(`[FETCH] status=${resp.status} finalUrl=${resp.url}`);
     if (!resp.ok) {
       const txt = await resp.text().catch(() => "<no-body>");
-      console.error("[ERROR] GitHub fetch failed:", resp.status, txt);
-      return res.status(resp.status).send("Failed to fetch from GitHub");
+      console.error('[ERROR] GitHub fetch failed:', resp.status, txt);
+      // forward status and text to client for easier debugging
+      return res.status(resp.status).json({ error: 'Failed to fetch from GitHub', status: resp.status, details: txt });
     }
 
     // Get the zip buffer
-    const buffer = await resp.buffer();
+    const arrayBuffer = await resp.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
     console.log("[ZIP] Processing zip file...");
     
     // Extract and modify the zip
@@ -88,4 +107,5 @@ app.get('/download', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 4000;
+console.log('GITHUB_TOKEN set?', !!GITHUB_TOKEN);
 app.listen(PORT, () => console.log(`Proxy running on http://localhost:${PORT}`));
