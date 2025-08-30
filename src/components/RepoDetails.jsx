@@ -23,6 +23,7 @@ export default function RepoDetails({ owner }) {
 
   const token = import.meta.env.VITE_GITHUB_TOKEN; // prefer env usage
 
+  const BASE_URL = 'https://repo-scrapper-production-91da.up.railway.app/'
   async function fetchRepos() {
     if (!owner) {
       setError("Please select a Trainee ID first");
@@ -78,7 +79,7 @@ export default function RepoDetails({ owner }) {
 
     try {
       const resp = await fetch(
-        `http://localhost:4000/download?owner=${encodeURIComponent(owner)}&repo=${encodeURIComponent(
+        `${BASE_URL}/download?owner=${encodeURIComponent(owner)}&repo=${encodeURIComponent(
           repoName
         )}&branch=${encodeURIComponent(branchName)}&id=${encodeURIComponent(id)}`
       );
